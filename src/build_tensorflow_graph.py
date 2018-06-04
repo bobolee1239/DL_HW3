@@ -61,6 +61,17 @@ def new_convLayer(inputLayer, cnnArchitecture):
         
     return convLayer, weights
 
+def flattenLayer(layer):
+    """
+    [width, height, numFilters]
+    """
+    shape = layer.get_shape()
+    # shape = [#imgs, height, width, numFilters]
+    numAttrs = shape[1:].num_elements()
+    
+    layer_flat = tf.reshape(layer, shape=[-1, numAttrs])
+    return layer_flat, numAttrs
+
 
 # In[4]:
 
