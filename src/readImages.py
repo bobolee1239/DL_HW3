@@ -3,12 +3,10 @@
 
 # In[1]:
 
-
 #!/usr/bin/env python3
 
 
 # In[2]:
-
 
 import cv2 
 import matplotlib.pyplot as plt
@@ -20,7 +18,6 @@ from Data import DataContainer, Data
 
 
 # In[3]:
-
 
 def readImage(filename, size = None, noiseStdev = None):
     """
@@ -56,8 +53,7 @@ def readImage(filename, size = None, noiseStdev = None):
 
 # In[4]:
 
-
-def readImagesIn(directory, size = None, noiseStdev = None):
+def readImagesIn(directory, size = None, noiseStdev = None, batch_size = None):
     """
     Read all .jpg image in specified directory.
     
@@ -69,18 +65,25 @@ def readImagesIn(directory, size = None, noiseStdev = None):
     ----------------------------------------------
       * list of images.
     """
-    print("  * Reading JPEG files in '" + directory + "' ...")
     files = glob(os.path.join(directory, '*.jpg'))
-    
-    images = [readImage(file, size = size, noiseStdev = noiseStdev)
-               for file in files]
-    print('  * Reding JPEG files DONE!')
-    return DataContainer(images)
+#     if not batch_size:
+#         print("  * Reading JPEG files in '" + directory + "' ...", end ="")
+#         images = [readImage(file, size = size, noiseStdev = noiseStdev)
+#                    for file in files]
+#         print('   DONE!')
+#         return DataContainer(images)
+
+
+    numBatches = len(files) // batch_size
+    for i in range(numBatches):
+        outputfiles = files[i*batch_size : (i+1)*batch_size]
+        images = [readImage(file, size = size, noiseStdev = noiseStdev)
+                for file in outputfiles]
+        yield DataContainer(images)
        
 
 
 # In[5]:
-
 
 def plotImages(imgs, savePath = None):
     """
@@ -94,7 +97,7 @@ def plotImages(imgs, savePath = None):
     
     for i, ax in enumerate(axes.flat):
         if i < numImgs:
-            pic = imgs[i].getAttr()
+            pic = imgs[i]
             # Clipping Data in 0 - 1
             for index, x in np.ndenumerate(pic):
                 if x > 1.0:
@@ -112,7 +115,6 @@ def plotImages(imgs, savePath = None):
 
 
 # In[6]:
-
 
 if __name__ == "__main__":
     file1 = '../faces/aa7fabda90b3a51124ef411a31483bf3-2.jpg'
