@@ -3,13 +3,11 @@
 
 # In[1]:
 
-
 import tensorflow as tf
 import numpy as np 
 
 
 # In[2]:
-
 
 class CNN_Architecture:
     def __init__(self, numFilters, filterSize, strides, toPadding, 
@@ -24,7 +22,6 @@ class CNN_Architecture:
 
 
 # In[3]:
-
 
 def new_weights(shape):
     stdev = 0.1
@@ -72,8 +69,12 @@ def new_dconvLayer(inputLayer, cnnArchitecture, outputShape,
                                                          cnnArchitecture.numFilters]
         weights = tf.get_variable('w', filterSpec, 
                           initializer = tf.truncated_normal_initializer(stddev=stdev))
+#         weights = tf.get_variable('w', filterSpec, 
+#                           initializer = tf.random_uniform_initializer(-1.0, 1.0))
         biases = tf.get_variable('bias', [outputShape[-1]], 
                                   initializer = tf.constant_initializer(0.0))
+#         biases = tf.get_variable('bias', [outputShape[-1]], 
+#                                   initializer = tf.random_uniform_initializer(-1.0, 1.0))
 
         convLayer = tf.nn.conv2d_transpose(inputLayer, 
                                            output_shape=outputShape,
@@ -109,9 +110,13 @@ def new_fcLayer(inputLayer, inputChannels, outputChannels, useReLU=True,
                 name="fc", stdev=0.01):
     with tf.variable_scope(name):
         weights = tf.get_variable('w', shape=[inputChannels, outputChannels], 
-                                initializer=tf.random_normal_initializer(stddev=stdev))
+                                initializer=tf.truncated_normal_initializer(stddev=stdev))
+#         weights = tf.get_variable('w', shape=[inputChannels, outputChannels], 
+#                                 initializer=tf.random_uniform_initializer(-1.0, 1.0))
         biases = tf.get_variable('bias', shape=[outputChannels], 
                                  initializer=tf.constant_initializer(0.0))
+#         biases = tf.get_variable('bias', shape=[outputChannels], 
+#                                  initializer=tf.random_uniform_initializer(-1.0, 1.0))
         layer = tf.matmul(inputLayer, weights) + biases
         if useReLU:
             layer = tf.nn.relu(layer)
@@ -128,7 +133,6 @@ def bn(x, is_training, scope):
 
 
 # In[4]:
-
 
 if __name__ == '__main__':
     cnnArchitecture = CNN_Architecture(numFilters = 20, 

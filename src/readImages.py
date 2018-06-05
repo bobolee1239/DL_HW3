@@ -15,6 +15,7 @@ import math
 from glob import glob
 import os
 from Data import DataContainer, Data
+import random
 
 
 # In[3]:
@@ -53,7 +54,7 @@ def readImage(filename, size = None, noiseStdev = None):
 
 # In[4]:
 
-def readImagesIn(directory, size = None, noiseStdev = None, batch_size = None):
+def readImagesIn(directory, size = None, noiseStdev = 0.0, batch_size = None):
     """
     Read all .jpg image in specified directory.
     
@@ -66,6 +67,7 @@ def readImagesIn(directory, size = None, noiseStdev = None, batch_size = None):
       * list of images.
     """
     files = glob(os.path.join(directory, '*.jpg'))
+    files = random.sample(files, len(files))
 #     if not batch_size:
 #         print("  * Reading JPEG files in '" + directory + "' ...", end ="")
 #         images = [readImage(file, size = size, noiseStdev = noiseStdev)
@@ -81,6 +83,29 @@ def readImagesIn(directory, size = None, noiseStdev = None, batch_size = None):
                 for file in outputfiles]
         yield DataContainer(images)
        
+
+
+# In[ ]:
+
+def sampleImagesIn(directory, numImgs, size = None, noiseStdev = 0.0):
+    """
+    Read all .jpg image in specified directory.
+    
+    Arg:
+    ---------------------------------------------
+      * directory [String] 
+    
+    Return:
+    ----------------------------------------------
+      * list of images.
+    """
+    files = glob(os.path.join(directory, '*.jpg'))
+    files = random.sample(files, numImgs)
+
+    images = [readImage(file, size = size, noiseStdev = noiseStdev)
+                for file in files]
+    return DataContainer(images)
+
 
 
 # In[5]:
