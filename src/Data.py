@@ -11,6 +11,7 @@
 
 
 import random
+import numpy as np
 
 
 # In[8]:
@@ -52,10 +53,10 @@ class DataContainer:
             if type(datas[0]) is not Data:
                 raise TypeError('DataContainer can only store "Data" type!')
             self.datas = datas
-#             self.toGenerate = random.sample(datas, len(datas))
+            self.toGenerate = random.sample(datas, len(datas))
         else:
             self.datas = []
-#             self.toGenerate = []
+            self.toGenerate = []
     
     
     def getAttrs(self):
@@ -63,27 +64,27 @@ class DataContainer:
         Return all attributes for each data.
         """
         attrs = [data.getAttr() for data in self.datas]
-        return attrs
+        return np.array(attrs)
     
     def getTargets(self):
         """
         Return all targets for each data.
         """
         targets = [data.getTarget() for data in self.datas]
-        return targets
+        return np.array(targets)
     
-#     def nextBatch(self, batch_size):
-#         """
-#         Return a batch_size DataContainer contains datas for a batch.
-#         """
-#         ## Make sure we have enough data to generate
-#         if len(self.toGenerate) < batch_size:
-#             self.toGenerate = random.sample(self.datas, len(self.datas))
-#         ## Pop out batch size number of data
-#         batch = self.toGenerate[:batch_size]
-#         ## Remove those data from list
-#         self.toGenerate = self.toGenerate[batch_size:]
-#         return DataContainer(batch)
+    def nextBatch(self, batch_size):
+        """
+        Return a batch_size DataContainer contains datas for a batch.
+        """
+        ## Make sure we have enough data to generate
+        if len(self.toGenerate) < batch_size:
+            self.toGenerate = random.sample(self.datas, len(self.datas))
+        ## Pop out batch size number of data
+        batch = self.toGenerate[:batch_size]
+        ## Remove those data from list
+        self.toGenerate = self.toGenerate[batch_size:]
+        return DataContainer(batch)
     
     def nextEpoch(self, batch_size):
         """
