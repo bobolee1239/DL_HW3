@@ -65,8 +65,8 @@ def new_dconvLayer(inputLayer, cnnArchitecture, outputShape,
                    name = "dconv2d", stdev = 0.01):
     with tf.variable_scope(name):
         paddingAlgorithm = 'SAME' if cnnArchitecture.toPadding else 'VALID'
-        filterSpec = list(cnnArchitecture.filterSize) + [cnnArchitecture.numInputChannels, 
-                                                         cnnArchitecture.numFilters]
+        filterSpec = list(cnnArchitecture.filterSize) + [cnnArchitecture.numFilters, 
+                                                         cnnArchitecture.numInputChannels]
         weights = tf.get_variable('w', filterSpec, 
                           initializer = tf.truncated_normal_initializer(stddev=stdev))
 #         weights = tf.get_variable('w', filterSpec, 
@@ -97,7 +97,7 @@ def new_dconvLayer(inputLayer, cnnArchitecture, outputShape,
 
 def flattenLayer(layer):
     """
-    [width, height, numFilters]
+    [height, width, numFilters]
     """
     shape = layer.get_shape()
     # shape = [#imgs, height, width, numFilters]
@@ -130,6 +130,16 @@ def bn(x, is_training, scope):
                                         scale=True,
                                         is_training=is_training,
                                         scope=scope)
+
+def unpool(pool, kernel=(2, 2)):
+    """
+    """
+    # pool shape = (batch, height, width, channels)
+    img_size = pool.get_shape()[1:3]
+    out_size = [s.value * k for s, k in zip(img_size, kernel)]
+    
+    unpool = tf.image.resize_images(pool, size = out_size, method=tf.image.ResizeMethod.BICUBIC)
+    return unpool
 
 
 # In[4]:
