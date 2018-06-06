@@ -138,8 +138,12 @@ def unpool(pool, kernel=(2, 2)):
     img_size = pool.get_shape()[1:3]
     out_size = [s.value * k for s, k in zip(img_size, kernel)]
     
-    unpool = tf.image.resize_images(pool, size = out_size, method=tf.image.ResizeMethod.BICUBIC)
-    return unpool
+#     unpool = tf.image.resize_images(pool, size = out_size, method=tf.image.ResizeMethod.BICUBIC)
+#     return unpool
+#     out = tf.concat_v2([x, tf.zeros_like(x)], 3)
+#     out = tf.concat_v2([out, tf.zeros_like(out)], 2)
+#     out_size = output_shape
+    return tf.image.resize_nearest_neighbor(pool, tf.stack(out_size))
 
 
 # In[4]:
