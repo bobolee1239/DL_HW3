@@ -3,10 +3,12 @@
 
 # In[1]:
 
+
 #!/usr/bin/env python3
 
 
 # In[2]:
+
 
 import cv2 
 import matplotlib.pyplot as plt
@@ -19,6 +21,7 @@ import random
 
 
 # In[3]:
+
 
 def readImage(filename, size = None, noiseStdev = None):
     """
@@ -48,11 +51,12 @@ def readImage(filename, size = None, noiseStdev = None):
         img += noise
  
             
-    return Data(img)
+    return img
     
 
 
 # In[4]:
+
 
 def readImagesIn(directory, size = None, noiseStdev = 0.0, batch_size = None):
     """
@@ -81,11 +85,12 @@ def readImagesIn(directory, size = None, noiseStdev = 0.0, batch_size = None):
         outputfiles = files[i*batch_size : (i+1)*batch_size]
         images = [readImage(file, size = size, noiseStdev = noiseStdev)
                 for file in outputfiles]
-        yield DataContainer(images)
+        yield np.array(images)
        
 
 
 # In[ ]:
+
 
 def sampleImagesIn(directory, numImgs, size = None, noiseStdev = 0.0):
     """
@@ -104,11 +109,11 @@ def sampleImagesIn(directory, numImgs, size = None, noiseStdev = 0.0):
 
     images = [readImage(file, size = size, noiseStdev = noiseStdev)
                 for file in files]
-    return DataContainer(images)
-
+    return np.array(images)
 
 
 # In[5]:
+
 
 def plotImages(imgs, savePath = None):
     """
@@ -140,6 +145,7 @@ def plotImages(imgs, savePath = None):
 
 
 # In[6]:
+
 
 if __name__ == "__main__":
     file1 = '../faces/aa7fabda90b3a51124ef411a31483bf3-2.jpg'
